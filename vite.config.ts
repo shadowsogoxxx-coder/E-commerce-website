@@ -23,19 +23,15 @@ export default defineConfig(({ mode }) => ({
     dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
   },
   // Add this build section below
-  build: {
-    chunkSizeWarningLimit: 1000,
+build: {
+    // 1. Increase the limit so the warning disappears
+    chunkSizeWarningLimit: 1000, 
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            // This splits your heavy dependencies into their own files
-            return id
-              .toString()
-              .split("node_modules/")[1]
-              .split("/")[0]
-              .toString();
-          }
+        // 2. Force specific heavy libraries into their own files
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          utils: ['lucide-react', 'clsx', 'tailwind-merge'],
         },
       },
     },
